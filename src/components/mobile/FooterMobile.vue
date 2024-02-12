@@ -22,12 +22,12 @@ export default {
 
 <template>
 <nav v-if="isClicked.menu" class="bg-pink-500 border-2 border-white w-full h-88 fixed z-20 bottom-0 left-0 mb-[4rem] rounded-[100px] grid">
-            <button class="menu-button" @click="switchPage('home')">ACCUEIL</button>
-            <button class="menu-button" @click="switchPage('circuit')">CIRCUIT</button>
-            <button class="menu-button" @click="switchPage('partenaires')">PARTENAIRES</button>
-            <button class="menu-button" @click="switchPage('reservation')">RÉSERVATION</button>
-            <button class="menu-button" @click="switchPage('recettes')">RECETTES</button>
-            <button class="menu-button" @click="switchPage('contact')">CONTACT</button>
+    <RouterLink to="/" class="menu-button">ACCUEIL</RouterLink>
+    <RouterLink to="/circuit" class="menu-button">CIRCUIT</RouterLink>
+    <RouterLink to="/partenaires" class="menu-button">PARTENAIRES</RouterLink>
+    <RouterLink to="/reservation" class="menu-button">RÉSERVATION</RouterLink>
+    <RouterLink to="/recettes" class="menu-button">RECETTES</RouterLink>
+    <RouterLink to="/contact" class="menu-button">CONTACT</RouterLink>
 </nav>
 
 <div v-if="isClicked.info" class="bg-pink-500 border-2 border-white w-full h-1/3 fixed z-20 bottom-0 left-0 mb-[4rem] rounded-[100px] grid">
@@ -102,6 +102,6 @@ export default {
 
 <style>
 .menu-button {
-    @apply mr-4 bg-transparent border-t border-white text-white px-4 py-2 transition duration-300 ease-in-out;
+    @apply flex justify-center items-center mr-4 bg-transparent border-t border-white text-black px-4 py-2 transition duration-300 ease-in-out;
 }
 </style>

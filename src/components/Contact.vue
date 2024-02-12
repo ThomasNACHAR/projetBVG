@@ -7,7 +7,48 @@ export default {
         section.scrollIntoView({ behavior: 'smooth' });
       }
     },
+    envoiMessage() {
+      this.isSent = true;
+      const fetchOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.data)
+      };
+      fetch(this.url+'/api/contact', fetchOptions)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur de récupération des données !');
+        }
+        return response.json();
+      })
+      .then(data=> {
+        console.log("Réponse :", data);
+        console.log("Message :", data.message);
+        this.isError=false;
+      })
+      .catch(error => {
+        console.error('Erreur de fetch :', error);
+        this.isError=true;
+      });
+      this.data = {
+        nom: '',
+        email: '',
+        message: ''
+      }
+    }
   },
+  data() {
+    return {
+      url: 'http://localhost:3000',
+      data: {
+        nom: '',
+        email: '',
+        message: ''
+      },
+      isError: false,
+      isSent: false
+    }
+  }
 }
 </script>
 
@@ -19,57 +60,20 @@ export default {
                 <button @click="scroll" class="home-button">Commencer</button>
             </div>
     </div>
-    <div id="contactForm" class="flex flex-col gap-8 justify-center items-center mt-12 mb-12">
-        <div class="flex flex-col items-center justify-center">
-            <label for="lastName">Nom:</label>
-            <input
-      type="text"
-      id="lastName"
-      v-model="lastNameValue"
-      class="border p-2 rounded"
-      placeholder="Nom"
-      required
-    />
-        </div>
-        <div class="flex flex-col items-center justify-center">
-            <label for="firstName">Prénom:</label>
-            <input
-      type="text"
-      id="firstName"
-      v-model="firstNameValue"
-      class="border p-2 rounded"
-      placeholder="Prénom"
-      required
-    />
-        </div>
-        <div class="flex flex-col items-center justify-center">
-            <label for="emailAddress">Adresse e-mail:</label>
-            <input
-      type="email"
-      id="emailAddress"
-      v-model="emailAddressValue"
-      class="border p-2 rounded"
-      placeholder="Adresse e-mail"
-      required
-    />
-        </div>
-        <div class="flex flex-col items-center justify-center">
-            <label for="message">Message:</label>
-            <textarea
-      id="message"
-      v-model="messageValue"
-      class="border p-2 rounded w-96 h-96"
-      placeholder="Votre message..."
-      required
-    ></textarea>
-        </div>
-        <button class="home-button">Envoyer</button>
-        
-    
-    
-    
-        
-    </div>
+    <form @submit.prevent="envoiMessage" class="flex flex-col gap-8 justify-center items-center mt-12 mb-12" id="contactForm">
+      <label for="nom">Nom:</label>
+      <input class="border p-2 rounded" type="text" id="nom" v-model="data.nom" required>
+
+      <label for="email">Email:</label>
+      <input class="border p-2 rounded" type="email" id="email" v-model="data.email" required>
+
+      <label for="message">Message:</label>
+      <textarea class="border p-2 rounded w-96 h-96" id="message" v-model="data.message" required></textarea>
+
+      <button class="home-button" type="submit">Envoyer</button>
+    </form>
+    <div v-if="isSent&&!isError" class="success m-4 bg-green-300 flex justify-center items-center">Message envoyé avec succès !</div>
+    <div v-if="isSent&&isError" class="error m-4 bg-red-300 flex justify-center items-center">Erreur d'envoi, veuillez réessayer plus tard</div>
 </template>
 
 <style>

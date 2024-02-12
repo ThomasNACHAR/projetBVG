@@ -1,41 +1,23 @@
 <script>
 
 import Header from "@/components/Header.vue"
-import Home from "@/components/Home.vue"
 import Footer from "@/components/Footer.vue"
-import Circuit from "@/components/Circuit.vue"
-import Partenaires from "@/components/Partenaires.vue"
-import Reservation from "@/components/Reservation.vue"
-import Contact from "@/components/Contact.vue"
 import FooterMobile from "@/components/mobile/FooterMobile.vue"
+import HeaderAdmin from "@/components/admin/HeaderAdmin.vue"
 
 export default {
   components: {
     Header,
-    Home,
     Footer,
-    Circuit,
-    Partenaires,
-    Reservation,
-    Contact,
-    FooterMobile
+    FooterMobile,
   },
   data() {
     return {
       isMobile: this.checkIfMobile(),
-      pageToggled: "home"
+      isAdmin: false
     }
   },
-  mounted() {
-    window.addEventListener('resize', this.handleResize);
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize);
-  },
   methods: {
-    togglePage(page) {
-      this.pageToggled = page
-    },
     checkIfMobile() {
       return window.innerWidth <= 1024
     },
@@ -45,22 +27,22 @@ export default {
     isTop() {
       return window.scrollY === 0
     }
+  },
+  watch: {
+    $route(to) {
+      this.isAdmin = to.name === 'admin'
+    }
   }
 }
 
 </script>
 
 <template>
-  <Header @toggle-page="togglePage" v-if="!isMobile"></Header>
-  <button v-if="!isTop" @click="scrollTop">appuyez !</button>
-  <Home v-if="pageToggled=='home'"></Home>
-  <Circuit v-if="pageToggled=='circuit'"></Circuit>
-  <Partenaires v-if="pageToggled=='partenaires'"></Partenaires>
-  <Reservation v-if="pageToggled=='reservation'"></Reservation>
-  <Contact v-if="pageToggled=='contact'"></Contact>
+  <Header v-if="!isMobile&&!isAdmin"></Header>
+  <RouterView></RouterView>
   <div class="mb-8"></div>
-  <Footer v-if="!isMobile"></Footer>
-  <FooterMobile @toggle-page="togglePage" v-else></FooterMobile>
+  <Footer v-if="!isMobile&&!isAdmin"></Footer>
+  <FooterMobile v-if="isMobile&&!isAdmin"></FooterMobile>
   
 </template>
 
